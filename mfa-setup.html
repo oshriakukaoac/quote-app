@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הגדרת אימות דו-שלבי – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--c-primary-dark),var(--c-primary));}
+  .box{width:100%;max-width:420px;padding:0 16px;}
+  .card2{background:#fff;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.25);padding:30px 26px;}
+  #qrHolder{display:flex;justify-content:center;margin:16px 0;}
+  #qrHolder svg{width:200px;height:200px;}
+  .secret-box{background:var(--c-bg);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:.85rem;text-align:center;user-select:all;direction:ltr;margin-bottom:16px;}
+  .login-err{background:var(--c-danger-bg);color:var(--c-danger);border-radius:8px;padding:9px 12px;font-size:.85rem;margin-bottom:14px;display:none;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="card2">
+    <h1 style="text-align:center;font-size:1.2rem;">הגדרת אימות דו-שלבי (חובה)</h1>
+    <p class="muted" style="text-align:center;">
+      כדי להגן על החשבון, חובה להגדיר אימות דו-שלבי (MFA) פעם אחת.<br>
+      התקינו אפליקציית אימות בטלפון — <b>Google Authenticator</b> או <b>Authy</b> — וסרקו את הקוד:
+    </p>
+    <div id="qrHolder"></div>
+    <p class="muted" style="text-align:center;font-size:.8rem;">לא ניתן לסרוק? הזינו ידנית את הקוד:</p>
+    <div class="secret-box" id="secretText">…</div>
+
+    <div class="login-err" id="errBox"></div>
+    <div class="login-info" id="infoBox" style="background:var(--c-success-bg);color:var(--c-success);border-radius:8px;padding:9px 12px;font-size:.85rem;margin-bottom:14px;display:none;"></div>
+    <div id="formArea">
+      <div class="field"><label>קוד בן 6 ספרות מהאפליקציה</label><input type="text" id="mfaCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div>
+      <button class="btn primary" id="verifyBtn" onclick="verifyEnrollment()" style="width:100%;justify-content:center;">אישור והפעלה</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-common.js"></script>
+<script src="js/mfa-setup.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ייבוא לקוחות – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+  <h1>ייבוא לקוחות מ-Finbot</h1>
+  <p class="muted">ב-Finbot: הכנסות ← לקוחות ← "ייצוא" (אקסל). מעלים כאן את הקובץ, בודקים את ההתאמה, ומייבאים. לקוח קיים עם אותו שם יעודכן במקום להשתכפל.</p>
+
+  <div class="card">
+    <div class="card-header"><h2>ייבוא קובץ</h2></div>
+    <div class="field" style="max-width:420px;"><label>קובץ לקוחות (Excel xlsx או CSV)</label><input type="file" id="fileInput" accept=".xlsx,.csv,.tsv,.txt"></div>
+
+    <div id="mappingArea" style="display:none;">
+      <div class="section-title">התאמת עמודות</div>
+      <div class="grid cols-4" id="mappingFields"></div>
+      <div class="section-title">תצוגה מקדימה (10 שורות ראשונות)</div>
+      <div style="overflow-x:auto;"><table class="compact"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="doImport()">ייבוא <span id="rowCountLabel"></span> הלקוחות</button>
+      </div>
+      <div id="importResult" class="hint" style="margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/csv-utils.js"></script>
+<script src="js/xlsx-mini.js"></script>
+<script src="js/customer-import.js"></script>
+</body>
+</html>

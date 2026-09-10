@@ -1,0 +1,11 @@
+# קבצי ריצה מקומיים / נתונים - לא צריך בריפו
+Mor-Levi/
+.claude/
+*.exe
+_build_tmp*
+QuoteAppServer*.exe
+
+# קבצי מערכת
+Thumbs.db
+desktop.ini
+.DS_Store

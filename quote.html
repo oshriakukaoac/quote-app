@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הצעת מחיר – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+
+  <div class="card-header">
+    <h1 id="pageTitle">הצעת מחיר חדשה</h1>
+    <span id="numberBadge" class="muted"></span>
+  </div>
+  <input type="hidden" id="quoteId">
+
+  <div class="card">
+    <div class="grid cols-3">
+      <div class="field" style="position:relative;">
+        <label>לקוח *</label>
+        <input type="text" id="customerSearchInput" placeholder="הקלידו לחיפוש לקוח..." autocomplete="off">
+        <input type="hidden" id="customerSelect">
+        <div id="customerSearchResults" class="card" style="display:none;position:absolute;z-index:20;max-height:280px;overflow-y:auto;width:100%;padding:6px;margin-top:4px;"></div>
+        <div class="hint"><a href="customers.html">+ הוספת לקוח חדש</a></div>
+      </div>
+      <div class="field"><label>תאריך מסמך</label><input type="date" id="quoteDate"></div>
+      <div class="field"><label>סטטוס</label>
+        <select id="quoteStatus">
+          <option value="draft">טיוטה</option>
+          <option value="final">סופי</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>פריטים</h2>
+      <button class="btn" onclick="addFreeItem()">+ פריט חופשי</button>
+    </div>
+    <div class="field" style="position:relative;max-width:460px;">
+      <label>חיפוש והוספה מהקטלוג שלי</label>
+      <input type="text" id="catalogSearchInput" placeholder="הקלידו לחיפוש מוצר/שירות מהקטלוג..." autocomplete="off">
+      <div id="catalogSearchResults" class="card" style="display:none;position:absolute;z-index:20;max-height:280px;overflow-y:auto;width:100%;padding:6px;margin-top:4px;"></div>
+    </div>
+    <div class="field" style="position:relative;max-width:460px;">
+      <label>חיפוש ממאגר ספקים (מור לוי / CDATA וכו') — <a href="supplier-import.html">ניהול מאגר הספקים</a></label>
+      <input type="text" id="supplierSearch" placeholder="לדוגמה: LNN-V14-6HIV או Lenovo" autocomplete="off">
+      <div id="supplierSearchResults" class="card" style="display:none;position:absolute;z-index:20;max-height:280px;overflow-y:auto;width:100%;padding:6px;margin-top:4px;"></div>
+    </div>
+    <div class="quick-add-wrap">
+      <span class="quick-add-title">תוספות מהירות:</span>
+      <div class="quick-add-list" id="quickAddProducts"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>שם פריט / שירות</th><th style="width:90px;">כמות</th><th style="width:130px;">מחיר יחידה לפני מע״מ</th><th style="width:110px;">סה״כ</th><th>פעולות</th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>הנחה ומע"מ</h2>
+      <div class="row">
+        <div class="field">
+          <label>סוג הנחה</label>
+          <select id="discountType">
+            <option value="fixed">סכום בש"ח</option>
+            <option value="percent">אחוז %</option>
+          </select>
+        </div>
+        <div class="field"><label>ערך הנחה</label><input type="number" step="0.01" id="discountValue" value="0"></div>
+      </div>
+      <div class="field"><label>אחוז מע"מ</label><input type="number" step="0.1" id="vatPercent"></div>
+    </div>
+    <div class="card">
+      <h2>סיכום</h2>
+      <div class="totals-box">
+        <div class="line"><span class="lbl">סכום ביניים:</span><span id="tSubtotal">₪0.00</span></div>
+        <div class="line"><span class="lbl">הנחה:</span><span id="tDiscount">₪0.00</span></div>
+        <div class="line"><span class="lbl">מע"מ:</span><span id="tVat">₪0.00</span></div>
+        <div class="line grand"><span class="lbl">סה"כ לתשלום:</span><span id="tTotal">₪0.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>הערות להצעה (מוצג ב-PDF)</h2>
+      <button class="btn sm" onclick="refreshNotesFromItems()">רענון אוטומטי מתיאורי המוצרים</button>
+    </div>
+    <textarea id="quoteNotes" rows="8"></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" onclick="saveQuote('draft')">שמירת טיוטה</button>
+    <button class="btn success" onclick="saveQuote('final')">שמירה כהצעה סופית</button>
+    <button class="btn" id="printBtn" onclick="printQuote()" disabled>הפקת PDF</button>
+    <button class="btn whatsapp-btn" id="whatsappBtn" onclick="openWhatsAppMessage()" disabled>הכנת הודעת WhatsApp</button>
+    <button class="btn finbot-btn" id="finbotBtn" onclick="sendToFinbotHandler()" disabled>שלח ל-Finbot</button>
+    <button class="btn" id="dupBtn" onclick="dupCurrent()" disabled>שכפול הצעה</button>
+    <button class="btn danger" id="delBtn" onclick="delCurrent()" disabled>מחיקת הצעה</button>
+  </div>
+  <div id="finbotStatus" style="margin-top:10px;font-size:.9rem;"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/finbot.js"></script>
+<script src="js/quote.js"></script>
+</body>
+</html>

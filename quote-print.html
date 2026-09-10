@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הצעת מחיר – הדפסה</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container no-print" style="max-width:820px;padding-top:16px;">
+  <div class="btn-row">
+    <button class="btn primary" onclick="window.print()">🖨 הדפסה / שמירה כ-PDF</button>
+    <a class="btn" href="#" id="backLink">חזרה לעריכה</a>
+  </div>
+</div>
+
+<div class="print-page" id="printRoot"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/quote-print.js"></script>
+</body>
+</html>

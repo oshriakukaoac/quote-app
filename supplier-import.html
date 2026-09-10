@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>קטלוג ספקים – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+  <h1>קטלוג ספקים</h1>
+  <p class="muted">מייבאים כאן מחירון (CSV) שהורדתם מאתר הספק (מחוברים לחשבון הסוחר שלכם), ואז מחפשים מוצר לפי מק"ט/שם ומוסיפים אותו לקטלוג המכירה עם לחיצה אחת — המחיר יתמלא אוטומטית כעלות, וחשבון הרווחיות יחשב לפניכם את מחיר המכירה.</p>
+
+  <div class="card">
+    <div class="card-header"><h2>ייבוא מחירון חדש</h2></div>
+    <div class="grid cols-2">
+      <div class="field"><label>שם הספק</label><input type="text" id="supplierName" placeholder="לדוגמה: מור לוי"></div>
+      <div class="field"><label>קובץ מחירון (CSV / TSV)</label><input type="file" id="fileInput" accept=".csv,.tsv,.txt"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="loadLatestFromFolder()">📂 טעינה וייבוא אוטומטיים מתיקיית Mor-Levi</button>
+    </div>
+    <p class="hint">מוריד תמיד את "הורדת מחירון" מאתר מור לוי לתיקיית <code>Mor-Levi</code> שבתיקיית התוכנה (או שולחים לי את הקובץ ואני שם אותו שם) — הכפתור הזה תמיד ימצא וייבא את הקובץ העדכני ביותר שם, גם אם שם הקובץ משתנה בכל הורדה. (עובד רק כשמריצים דרך "מערכת הצעות מחיר.exe").</p>
+    <div id="mappingArea" style="display:none;">
+      <div class="section-title">התאמת עמודות</div>
+      <div class="grid cols-4" id="mappingFields"></div>
+      <div class="section-title">תצוגה מקדימה (10 שורות ראשונות)</div>
+      <div style="overflow-x:auto;"><table class="compact"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="doImport()">ייבוא <span id="rowCountLabel"></span> השורות לקטלוג הספק</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>חיפוש במאגר הספקים</h2>
+      <div class="row" style="max-width:420px;">
+        <select id="supplierFilter"></select>
+        <button class="btn danger sm" onclick="clearSupplier()">מחיקת מחירון הספק שנבחר</button>
+      </div>
+    </div>
+    <div class="field"><label>חיפוש לפי מק"ט או שם מוצר</label><input type="text" id="searchBox" placeholder="לדוגמה: Z890 או Lenovo"></div>
+    <div id="resultsInfo" class="hint"></div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>מק"ט</th><th>תיאור</th><th>יצרן</th><th>קטגוריה</th><th>זמינות</th><th>מחיר עלות</th><th></th></tr></thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/csv-utils.js"></script>
+<script src="js/supplier-import.js"></script>
+</body>
+</html>

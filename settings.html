@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הגדרות – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+  <h1>הגדרות מערכת ופרטי העסק</h1>
+
+  <div class="card">
+    <div class="card-header"><h2>פרטי העסק (מוצגים בראש כל הצעת מחיר)</h2></div>
+    <div class="grid cols-2">
+      <div class="field"><label>שם העסק</label><input type="text" id="companyName"></div>
+      <div class="field"><label>עוסק מורשה / ח.פ.</label><input type="text" id="taxId"></div>
+      <div class="field"><label>כתובת</label><input type="text" id="address"></div>
+      <div class="field"><label>טלפון</label><input type="tel" id="phone"></div>
+      <div class="field"><label>אימייל</label><input type="email" id="email"></div>
+      <div class="field"><label>אתר אינטרנט</label><input type="text" id="website"></div>
+      <div class="field"><label>שורת חתימה / תגית (מוצגת בתחתית ההצעה וההודעות)</label><input type="text" id="tagline"></div>
+      <div class="field"><label>טקסט לוגו קצר (עד 4 תווים)</label><input type="text" id="logoText" maxlength="4"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>ברירות מחדל לתמחור</h2></div>
+    <div class="grid cols-2">
+      <div class="field"><label>אחוז מע"מ ברירת מחדל</label><input type="number" step="0.1" id="defaultVat"></div>
+      <div class="field"><label>אחוז רווח ברירת מחדל למוצר חדש</label><input type="number" step="0.1" id="defaultMargin"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>אינטגרציית Finbot (הנהלת חשבונות)</h2></div>
+    <p class="muted">מאפשר לשלוח הצעת מחיר ישירות ל-Finbot בלחיצת כפתור. את המפתח מקבלים ב-Finbot תחת הגדרות עסק ← מפתח API להפקת הכנסות. המפתח נשמר רק במחשב הזה (בדפדפן), לא נשלח לשום מקום חוץ מ-Finbot עצמה.</p>
+    <div class="field" style="max-width:420px;">
+      <label>מפתח API</label>
+      <input type="password" id="finbotApiKey" placeholder="הדביקו כאן את המפתח מ-Finbot" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>מספור הצעות מחיר</h2></div>
+    <div class="field" style="max-width:260px;">
+      <label>מספר ההצעה הבאה שתונפק</label>
+      <input type="number" step="1" id="nextQuoteNumber">
+      <div class="hint">שינוי כאן משפיע רק על ההצעה הבאה שתיווצר.</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" onclick="save()">שמירת הגדרות</button>
+  </div>
+
+  <div class="card" style="margin-top:30px;">
+    <div class="card-header"><h2>גיבוי ושחזור נתונים</h2></div>
+    <p class="muted">
+      <b>חשוב לדעת:</b> הנתונים נשמרים בענן (Supabase) ומסונכרנים אוטומטית בין כל המכשירים שמחוברים עם אותו משתמש — אין יותר צורך לגבות/לשחזר בין מכשירים. הכפתורים כאן שימושיים בעיקר לגיבוי תקופתי לקובץ מקומי.
+      <br><br>יש לכם נתונים ישנים מהגרסה המקומית (מלפני המעבר לענן)? <a href="migrate-local-data.html"><b>לחצו כאן להעברתם לענן</b></a> (יש לפתוח את הקישור מאותו דפדפן/כתובת שבהם עבדתם עד היום).
+    </p>
+    <div class="btn-row">
+      <button class="btn" onclick="exportBackup()">📤 ייצוא כל הנתונים לקובץ גיבוי</button>
+      <label class="btn" style="cursor:pointer;">
+        📥 ייבוא מקובץ גיבוי
+        <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="importBackup(this.files[0])">
+      </label>
+    </div>
+    <div id="backupStatus" class="hint" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="card" style="margin-top:30px;border-color:#f0caca;">
+    <div class="card-header"><h2 style="color:var(--c-danger);">אזור מסוכן</h2></div>
+    <p class="muted">מחיקה לצמיתות של כל הלקוחות, המוצרים, ההצעות ומחירוני הספקים בענן. לא ניתן לבטל.</p>
+    <button class="btn danger" onclick="resetAll()">איפוס כל הנתונים</button>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ייבוא נתונים ישנים לענן – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+  <h1>ייבוא נתונים ישנים (מהגרסה המקומית) לענן</h1>
+  <div class="card">
+    <p class="muted">
+      עד עכשיו הנתונים נשמרו בדפדפן הזה בלבד (localStorage). מעכשיו המערכת שומרת הכל בענן (Supabase) כדי שיהיה נגיש מכל המכשירים שלך.
+      דף זה בודק אם יש כאן נתונים ישנים מהגרסה המקומית, ומעביר אותם פעם אחת לענן.
+      <br><br><b>חשוב:</b> יש לפתוח את הדף הזה בדיוק מאותו דפדפן/כתובת שבו עבדתם עד היום (כלומר דרך <code>מערכת הצעות מחיר.exe</code> / http://localhost:8080), אחרת לא יימצאו כאן הנתונים הישנים.
+    </p>
+    <div id="scanResult" class="hint"></div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn primary" id="importBtn" onclick="runMigration()" disabled>העברת הנתונים לענן</button>
+    </div>
+    <div id="migrateStatus" class="hint" style="margin-top:10px;"></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/migrate-local-data.js"></script>
+</body>
+</html>

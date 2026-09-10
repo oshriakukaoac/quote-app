@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דשבורד – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+
+  <div class="card-header">
+    <h1>דשבורד</h1>
+    <a href="quote.html" class="btn primary">+ הצעת מחיר חדשה</a>
+  </div>
+
+  <div class="grid cols-4" id="stats"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>הצעות מחיר אחרונות</h2>
+      <div class="row" style="max-width:280px;min-width:180px;flex:none;">
+        <select id="filterStatus">
+          <option value="">כל הסטטוסים</option>
+          <option value="draft">טיוטות</option>
+          <option value="final">סופיות</option>
+        </select>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>מס' הצעה</th><th>לקוח</th><th>תאריך</th><th>סטטוס</th><th>סה"כ לתשלום</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="quotesBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="app-footer">מערכת הצעות מחיר · OAC – שירותי מחשוב וענן</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

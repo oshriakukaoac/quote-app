@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>קטלוג מוצרים ושירותים – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container">
+  <h1>קטלוג מוצרים ושירותים</h1>
+
+  <div class="card" id="formCard">
+    <div class="card-header"><h2 id="formTitle">מוצר / שירות חדש</h2></div>
+    <input type="hidden" id="prodId">
+
+    <div class="section-title">מילוי מהיר ממאגר הספקים</div>
+    <div class="field" style="position:relative;">
+      <label>חיפוש לפי מק"ט או שם (מור לוי / CDATA וכו') — <a href="supplier-import.html">ניהול מאגר הספקים</a></label>
+      <input type="text" id="supplierSearch" placeholder="לדוגמה: Z890 או Lenovo" autocomplete="off">
+      <div id="supplierSearchResults" class="card" style="display:none;position:absolute;z-index:20;max-height:260px;overflow-y:auto;width:100%;padding:6px;margin-top:4px;"></div>
+    </div>
+
+    <div class="section-title">פרטי מוצר</div>
+    <div class="grid cols-2">
+      <div class="field"><label>שם המוצר / השירות *</label><input type="text" id="prodName"></div>
+      <div class="field"><label>מק"ט</label><input type="text" id="prodSku"></div>
+      <div class="field"><label>קטגוריה</label><input type="text" id="prodCategory" placeholder="לדוגמה: מחשבים ניידים, רישוי, שירות"></div>
+      <div class="field"><label>ספק (ידני)</label><input type="text" id="prodSupplier" placeholder="לדוגמה: מור לוי / CDATA"></div>
+    </div>
+
+    <div class="section-title">מחשבון עלות ורווחיות</div>
+    <div class="grid cols-2">
+      <div>
+        <div class="field">
+          <label>מחיר עלות לפני מע״מ (₪)</label>
+          <div class="profit-preview-row">
+            <input type="number" min="0" step="0.01" id="prodCost" inputmode="decimal" oninput="updateCalc()" placeholder="0.00">
+            <div class="profit-live-result" aria-live="polite">
+              <span id="profitPreviewLabel">לאחר 30% רווח</span>
+              <strong id="profitPreview">₪0.00</strong>
+              <small id="profitVatPreview">מחיר סופי ללקוח: ₪0.00</small>
+            </div>
+          </div>
+        </div>
+        <div class="field"><label>אחוז רווח רצוי (%)</label><input type="number" step="0.1" id="prodMargin" oninput="updateCalc()"></div>
+        <div class="field">
+          <label>מחיר מכירה (₪)</label>
+          <div class="vat-price-pair">
+            <div>
+              <span class="vat-price-label">לפני מע״מ</span>
+              <input type="number" min="0" step="0.01" id="prodSale" inputmode="decimal" oninput="updateCalc(true)" placeholder="0.00">
+            </div>
+            <div class="vat-live-result" aria-live="polite">
+              <span class="vat-price-label" id="saleVatLabel">מחיר סופי ללקוח</span>
+              <strong id="saleWithVat">₪0.00</strong>
+            </div>
+          </div>
+        </div>
+        <div class="field"><label>מחיר ספק (מידע פנימי, אופציונלי)</label><input type="number" step="0.01" id="prodSupplierPrice"></div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-line"><span>עלות כולל מע"מ (18%):</span><b id="calcCostVat">₪0.00</b></div>
+        <div class="calc-line"><span>מחיר מומלץ לפי הרווח שהוגדר (לפני מע"מ):</span><b id="calcSuggested">₪0.00</b></div>
+        <div class="calc-line"><span>רווח בש"ח למכירה:</span><b id="calcProfit">₪0.00</b></div>
+        <div class="calc-line" style="border-top:1px solid #cddcf1;margin-top:6px;padding-top:8px;"><span>מחיר סופי ללקוח (כולל מע״מ):</span><b id="calcFinal" style="font-size:1.1rem;">₪0.00</b></div>
+        <div class="btn-row"><button type="button" class="btn sm" onclick="applySuggested()">החל מחיר מומלץ כמחיר מכירה</button></div>
+      </div>
+    </div>
+
+    <div class="section-title">טקסט שיווקי (לשימוש בהצעת מחיר ובהודעת וואטסאפ)</div>
+    <div class="field"><label>כותרת</label><input type="text" id="mktTitle" placeholder="ברירת מחדל: שם המוצר"></div>
+    <div class="field"><label>תיאור כללי</label><textarea id="mktIntro" rows="2"></textarea></div>
+    <div class="field"><label>מפרט (שורה אחת לכל פריט)</label><textarea id="mktSpecs" rows="4" placeholder="מעבד Intel Core i5&#10;זיכרון 16GB RAM"></textarea></div>
+    <div class="field"><label>למי זה מתאים?</label><textarea id="mktAudience" rows="2"></textarea></div>
+    <div class="field"><label>שורת סיכום / תגית</label><input type="text" id="mktClosing"></div>
+
+    <div class="btn-row">
+      <button class="btn primary" onclick="saveProduct()">שמירה</button>
+      <button class="btn ghost" onclick="resetForm()">ניקוי טופס</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>רשימת מוצרים</h2></div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th title="מוצר מועדף - קיצור דרך בהצעת מחיר">⭐</th><th>שם</th><th>מק"ט</th><th>עלות</th><th>רווח %</th><th>מחיר מכירה (לפני מע"מ)</th><th>כולל מע"מ</th><th></th></tr></thead>
+        <tbody id="prodBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/products.js"></script>
+</body>
+</html>
