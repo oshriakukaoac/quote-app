@@ -1,4 +1,5 @@
 let recoveryReady = false;
+let pendingFactorId = null;
 
 async function handleUpdatePassword(){
   if(authBusy) return;
@@ -21,11 +22,62 @@ async function handleUpdatePassword(){
   }
 }
 
+async function handleMfaVerify(){
+  if(authBusy) return;
+  showErr('');
+  const code = document.getElementById('mfaCode').value.trim();
+  if(!/^\d{6}$/.test(code)){ showErr('קוד האימות חייב להיות 6 ספרות'); return; }
+  setAuthBusy(true, 'mfaBtn', 'מאמת...');
+  try{
+    const { data: challenge, error: chErr } = await withTimeout(supabaseClient.auth.mfa.challenge({ factorId: pendingFactorId }));
+    if(chErr){ setAuthBusy(false, 'mfaBtn'); showErr(friendlyAuthError(chErr)); return; }
+    const { error: verErr } = await withTimeout(supabaseClient.auth.mfa.verify({
+      factorId: pendingFactorId, challengeId: challenge.id, code
+    }));
+    setAuthBusy(false, 'mfaBtn');
+    if(verErr){ showErr('קוד שגוי, נסו שוב.'); return; }
+    document.getElementById('mfaRecoveryStep').style.display = 'none';
+    document.getElementById('titleText').textContent = 'קביעת סיסמה חדשה';
+    showErr(''); showInfo('');
+    document.getElementById('formArea').style.display = 'block';
+  }catch(e){
+    setAuthBusy(false, 'mfaBtn');
+    showErr(e.message);
+  }
+}
+
+/* אחרי שחזור סשן מהקישור במייל - בודקים אם צריך גם אימות דו-שלבי (AAL2) לפני
+   שמאפשרים לקבוע סיסמה חדשה. אם למשתמש יש MFA מופעל, Supabase דורש את זה
+   כדי למנוע ממי שיש לו רק גישה למייל (בלי הטלפון) לאפס סיסמה. */
+async function proceedAfterRecovery(){
+  try{
+    const { data: aal, error: aalErr } = await withTimeout(supabaseClient.auth.mfa.getAuthenticatorAssuranceLevel());
+    if(aalErr){ showErr(friendlyAuthError(aalErr)); return; }
+
+    if(aal.nextLevel === 'aal2' && aal.currentLevel !== 'aal2'){
+      const { data: factors, error: factorsErr } = await withTimeout(supabaseClient.auth.mfa.listFactors());
+      if(factorsErr){ showErr(friendlyAuthError(factorsErr)); return; }
+      const totp = (factors.totp || []).find(f => f.status === 'verified');
+      if(!totp){ showErr('שגיאת הגדרת אבטחה - פנו לתמיכה.'); return; }
+      pendingFactorId = totp.id;
+      document.getElementById('titleText').textContent = 'אימות דו-שלבי';
+      document.getElementById('mfaRecoveryStep').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('formArea').style.display = 'block';
+  }catch(e){
+    showErr(e.message);
+  }
+}
+
+document.getElementById('mfaCode').addEventListener('keydown', e => { if(e.key === 'Enter') handleMfaVerify(); });
+
 // Supabase מפענח את הטוקנים מה-URL בעצמו ומשגר אירוע PASSWORD_RECOVERY
 supabaseClient.auth.onAuthStateChange((event) => {
   if(event === 'PASSWORD_RECOVERY'){
     recoveryReady = true;
-    document.getElementById('formArea').style.display = '';
+    proceedAfterRecovery();
   }
 });
 
