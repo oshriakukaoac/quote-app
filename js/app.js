@@ -92,10 +92,19 @@ function renderNav(activeHref){
     <div class="topnav">
       <div class="topnav-inner">
         <div class="brand"><span class="logo-badge">OAC</span><span>הצעות מחיר</span></div>
-        <div class="nav-links">${links}</div>
-        <div class="nav-spacer"></div>
-        <a href="settings.html" class="nav-settings ${settingsActive ? 'active' : ''}">⚙️ הגדרות</a>
-        <a href="#" class="nav-settings" onclick="handleSignOut();return false;">🚪 התנתק</a>
+        <button type="button" class="nav-toggle" onclick="toggleMobileNav()" aria-label="תפריט">☰</button>
+        <div class="nav-collapsible" id="navCollapsible">
+          <div class="nav-links">${links}</div>
+          <div class="nav-spacer"></div>
+          <a href="settings.html" class="nav-settings ${settingsActive ? 'active' : ''}">⚙️ הגדרות</a>
+          <a href="#" class="nav-settings" onclick="handleSignOut();return false;">🚪 התנתק</a>
+        </div>
       </div>
     </div>`;
+}
+
+function toggleMobileNav(){
+  const el = document.getElementById('navCollapsible');
+  if(!el) return;
+  el.classList.toggle('open');
 }

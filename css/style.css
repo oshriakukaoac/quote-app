@@ -41,6 +41,11 @@ h2{font-size:1.2rem;}
 h3{font-size:1.02rem;}
 
 .container{max-width:1180px;margin:0 auto;padding:22px 20px 60px;}
+@media (max-width:480px){
+  .container{padding:14px 12px 40px;}
+  h1{font-size:1.3rem;}
+  .card{padding:14px;}
+}
 
 /* ---- ניווט עליון ---- */
 .topnav{
@@ -59,6 +64,7 @@ h3{font-size:1.02rem;}
   display:flex;align-items:center;justify-content:center;
   font-weight:800;font-size:.8rem;letter-spacing:.5px;
 }
+.nav-collapsible{display:flex;align-items:center;gap:4px;flex:1;min-width:0;}
 .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
 .nav-links a{
   color:#dce9fb;padding:8px 12px;border-radius:8px;font-size:.92rem;font-weight:600;
@@ -75,6 +81,25 @@ h3{font-size:1.02rem;}
 }
 .nav-settings:hover{background:rgba(255,255,255,.12);text-decoration:none;color:#fff;}
 .nav-settings.active{background:#fff;color:var(--c-primary-dark);border-color:#fff;}
+
+/* ---- ניווט במסך צר (טלפון) - הופך להמבורגר עם תפריט נפתח ---- */
+.nav-toggle{
+  display:none;background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;
+  font-size:1.2rem;line-height:1;padding:6px 12px;border-radius:8px;cursor:pointer;margin-inline-start:auto;
+}
+@media (max-width:860px){
+  .topnav-inner{flex-wrap:wrap;height:auto;min-height:58px;padding:10px 16px;}
+  .nav-toggle{display:block;}
+  .nav-collapsible{
+    display:none;width:100%;flex-direction:column;align-items:stretch;gap:2px;
+    padding-top:10px;margin-top:8px;border-top:1px solid rgba(255,255,255,.18);
+  }
+  .nav-collapsible.open{display:flex;}
+  .nav-links{flex-direction:column;gap:2px;width:100%;}
+  .nav-links a{padding:11px 14px;}
+  .nav-spacer{display:none;}
+  .nav-settings{width:100%;box-sizing:border-box;text-align:center;}
+}
 
 /* ---- כרטיסים ---- */
 .card{
