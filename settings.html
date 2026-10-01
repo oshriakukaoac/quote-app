@@ -41,6 +41,19 @@
   </div>
 
   <div class="card">
+    <div class="card-header"><h2>אבטחת חשבון</h2></div>
+    <p class="muted">שינוי סיסמה כאן, בזמן שאתם כבר מחוברים — לא צריך לדעת את הסיסמה הנוכחית ולא צריך קישור במייל.</p>
+    <div class="grid cols-2" style="max-width:600px;">
+      <div class="field"><label>סיסמה חדשה</label><input type="password" id="newPassword" autocomplete="new-password"></div>
+      <div class="field"><label>אימות סיסמה</label><input type="password" id="newPassword2" autocomplete="new-password"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" id="changePasswordBtn" onclick="changePassword()">עדכון סיסמה</button>
+    </div>
+    <div id="passwordStatus" class="hint" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="card">
     <div class="card-header"><h2>אינטגרציית Finbot (הנהלת חשבונות)</h2></div>
     <p class="muted">מאפשר לשלוח הצעת מחיר ישירות ל-Finbot בלחיצת כפתור. את המפתח מקבלים ב-Finbot תחת הגדרות עסק ← מפתח API להפקת הכנסות. המפתח נשמר רק במחשב הזה (בדפדפן), לא נשלח לשום מקום חוץ מ-Finbot עצמה.</p>
     <div class="field" style="max-width:420px;">

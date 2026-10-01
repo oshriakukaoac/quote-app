@@ -1,5 +1,40 @@
 renderNav('settings.html');
 
+let passwordChangeBusy = false;
+async function changePassword(){
+  if(passwordChangeBusy) return;
+  const status = document.getElementById('passwordStatus');
+  const p1 = document.getElementById('newPassword').value;
+  const p2 = document.getElementById('newPassword2').value;
+  if(p1.length < 6){ status.textContent = 'הסיסמה חייבת להיות לפחות 6 תווים'; status.style.color = 'var(--c-danger)'; return; }
+  if(p1 !== p2){ status.textContent = 'הסיסמאות אינן תואמות'; status.style.color = 'var(--c-danger)'; return; }
+  passwordChangeBusy = true;
+  const btn = document.getElementById('changePasswordBtn');
+  btn.disabled = true; btn.textContent = 'מעדכן...';
+  status.textContent = ''; status.style.color = '';
+  try{
+    const { error } = await supabaseClient.auth.updateUser({ password: p1 });
+    passwordChangeBusy = false;
+    btn.disabled = false; btn.textContent = 'עדכון סיסמה';
+    if(error){
+      status.style.color = 'var(--c-danger)';
+      status.textContent = error.message && /aal2/i.test(error.message)
+        ? 'כדי לשנות סיסמה צריך סשן מאומת-דו-שלבי מלא - התנתקו והתחברו מחדש (כולל קוד האימות), ואז נסו שוב.'
+        : (error.message || 'שגיאה בעדכון הסיסמה');
+      return;
+    }
+    status.style.color = 'var(--c-success)';
+    status.textContent = '✓ הסיסמה עודכנה בהצלחה.';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('newPassword2').value = '';
+  }catch(e){
+    passwordChangeBusy = false;
+    btn.disabled = false; btn.textContent = 'עדכון סיסמה';
+    status.style.color = 'var(--c-danger)';
+    status.textContent = e.message;
+  }
+}
+
 async function load(){
   const s = await DB.getSettings();
   document.getElementById('companyName').value = s.companyName || '';
