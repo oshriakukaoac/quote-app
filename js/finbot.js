@@ -2,14 +2,12 @@
    תיעוד: https://finbot.helpjuice.com/he_IL/api-docs-create-income
    POST https://api.finbotai.co.il/income , header "secret" = מפתח ה-API.
    הדפדפן חוסם קריאה ישירה מהאתר ל-API של Finbot (CORS - נבדק בפועל).
-   לכן הבקשה נשלחת למתווך המקומי (/api/finbot/income), ש-serve.ps1 מריץ.
-   ניסינו להעביר את זה ל-Supabase Edge Function (supabase/functions/finbot-proxy
-   - הקוד עדיין שם) אבל נתקלנו בבאג פלטפורמה ב-Supabase: ה-gateway מחזיר 401
-   על כל בקשה לפונקציה, גם עם JWT תקין (חדש או legacy) וגם כש-"Verify JWT" כבוי
-   בהגדרות. נדחה את זה לשלב הפריסה ל-Vercel, שם ההעברה תהיה כפונקציית שרת
-   רגילה בלי הבעיה הזו. בינתיים: כדי שהכפתור "שלח ל-Finbot" יעבוד, צריך להריץ
-   את "מערכת הצעות מחיר" (serve.ps1 / הפעלת התוכנה.bat) ולהיכנס דרך
-   http://localhost:8080 (ולא ע"י פתיחת index.html ישירות). */
+   לכן הבקשה נשלחת לנתיב היחסי /api/finbot/income, שמתווך אותה ל-Finbot משרת:
+   - בענן (Cloudflare Pages): functions/api/finbot/income.js
+   - מקומית: serve.ps1 (הפעלת התוכנה.bat, http://localhost:8080)
+   (ניסינו בעבר Supabase Edge Function - supabase/functions/finbot-proxy - אבל
+   ה-gateway של Supabase החזיר 401 על כל בקשה בגלל באג פלטפורמה; הקוד נשאר
+   שם לעיון בלבד.) */
 
 const FINBOT_PROXY_PATH = '/api/finbot/income';
 const FINBOT_DOC_TYPE_QUOTE = '7'; // הצעת מחיר
@@ -54,7 +52,7 @@ async function sendQuoteToFinbot(quote, customer, settings){
     return { ok: false, message: 'לא הוגדר מפתח API של Finbot בהגדרות המערכת.' };
   }
   if(location.protocol === 'file:'){
-    return { ok: false, message: 'כדי לשלוח ל-Finbot צריך להריץ את "מערכת הצעות מחיר" (הפעלת התוכנה.bat) ולהיכנס לתוכנה דרך http://localhost:8080 במקום פתיחת הקובץ ישירות.' };
+    return { ok: false, message: 'כדי לשלוח ל-Finbot יש להיכנס לתוכנה דרך האתר (erp.oac.co.il) או דרך http://localhost:8080 — לא ע"י פתיחת הקובץ ישירות מהדיסק.' };
   }
   const payload = buildFinbotPayload(quote, customer, settings);
   // ל-header של HTTP מותר רק טווח תווים מצומצם (ISO-8859-1) - אם הודבק מפתח API
@@ -70,7 +68,7 @@ async function sendQuoteToFinbot(quote, customer, settings){
     });
     text = await res.text();
   }catch(e){
-    return { ok: false, message: 'שגיאת רשת מול השרת המקומי. ודאו ש"מערכת הצעות מחיר" רצה (יש חלון PowerShell ממוזער פתוח), ושנכנסתם דרך http://localhost:8080.', error: String(e) };
+    return { ok: false, message: 'שגיאת רשת מול שרת ה-Finbot. בדקו חיבור לאינטרנט ונסו שוב (אם אתם עובדים מקומית: ודאו ש"הפעלת התוכנה.bat" רץ).', error: String(e) };
   }
   if(res.status === 401){
     return { ok: false, message: 'מפתח ה-API נדחה (401) — בדקו שהמפתח בהגדרות תקין ולא נמחק.' };
