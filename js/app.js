@@ -76,6 +76,7 @@ const NAV_ITEMS = [
   { href: 'customers.html', label: 'לקוחות' },
   { href: 'products.html', label: 'קטלוג מוצרים' },
   { href: 'supplier-import.html', label: 'קטלוג ספקים' },
+  { href: 'calculator.html', label: 'מחשבון מחיר' },
   { href: 'quote.html', label: 'הצעת מחיר חדשה', cta: true }
 ];
 
