@@ -10,6 +10,9 @@
   "theme_color": "#1a4f8b",
   "lang": "he",
   "dir": "rtl",
+  "shortcuts": [
+    { "name": "מחשבון מחיר", "short_name": "מחשבון", "url": "/calculator.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ],
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

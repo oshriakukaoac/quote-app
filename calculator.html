@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="הצעות מחיר">
+<meta name="theme-color" content="#1a4f8b">
+<title>מחשבון מחיר – מערכת הצעות מחיר</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<div class="container calc-page">
+  <h1>מחשבון מחיר</h1>
+  <p class="muted" style="margin-top:-6px;">מזינים מספר בכל שדה — כל השאר מתעדכנים אוטומטית.</p>
+
+  <div class="card">
+    <div class="field">
+      <label for="cName">שם המוצר</label>
+      <input type="text" id="cName" placeholder="לדוגמה: מחשב נייד Lenovo" autocomplete="off">
+    </div>
+
+    <div class="calc-pct-row">
+      <div class="field">
+        <label for="cMargin">אחוז רווח</label>
+        <div class="calc-suffix"><input type="text" inputmode="decimal" id="cMargin" data-key="margin"><span>%</span></div>
+      </div>
+      <div class="field">
+        <label for="cVat">מע״מ</label>
+        <div class="calc-suffix"><input type="text" inputmode="decimal" id="cVat" data-key="vat"><span>%</span></div>
+      </div>
+    </div>
+    <div class="calc-chips" id="marginChips"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="calc-section-title">עלות (מה שאני משלם)</h2>
+    <div class="calc-pair">
+      <div class="field">
+        <label for="cCost">לפני מע״מ</label>
+        <div class="calc-money"><span>₪</span><input type="text" inputmode="decimal" id="cCost" data-key="cost" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="cCostVat">כולל מע״מ</label>
+        <div class="calc-money"><span>₪</span><input type="text" inputmode="decimal" id="cCostVat" data-key="costVat" placeholder="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card calc-sale-card">
+    <h2 class="calc-section-title">מחיר מכירה (<span id="marginLabel">25</span>% רווח)</h2>
+    <div class="calc-pair">
+      <div class="field">
+        <label for="cSale">לפני מע״מ</label>
+        <div class="calc-money"><span>₪</span><input type="text" inputmode="decimal" id="cSale" data-key="sale" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="cSaleVat">כולל מע״מ — ללקוח</label>
+        <div class="calc-money calc-highlight"><span>₪</span><input type="text" inputmode="decimal" id="cSaleVat" data-key="saleVat" placeholder="0"></div>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:0;">
+      <label for="cProfit">רווח נקי בשקלים (לפני מע״מ)</label>
+      <div class="calc-money"><span>₪</span><input type="text" inputmode="decimal" id="cProfit" data-key="profit" placeholder="0"></div>
+    </div>
+  </div>
+
+  <div class="btn-row calc-actions">
+    <button class="btn" onclick="copySummary()">📋 העתקה</button>
+    <button class="btn success" onclick="saveToCatalog()">💾 שמירה לקטלוג</button>
+    <button class="btn" onclick="resetCalc()">🔄 ניקוי</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script src="js/calculator.js"></script>
+</body>
+</html>
